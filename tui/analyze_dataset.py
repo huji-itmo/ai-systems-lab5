@@ -1,12 +1,10 @@
-# analyze_dataset.py (or keep in same file if preferred)
-
 import os
 import pandas as pd
 from tui.prob_plotting import boxplot_single, plot_empirical_cdf, plot_polygon_from_data
 from variation_series import StatisticsAnalyzer
 
 
-def analyze_dataset(csv_path: str = "Student_Performance.csv", plot_dir: str = "plots"):
+def analyze_dataset(csv_path: str = "DATA.csv", plot_dir: str = "plots"):
     os.makedirs(plot_dir, exist_ok=True)
     df = pd.read_csv(csv_path)
 
@@ -35,8 +33,8 @@ def analyze_dataset(csv_path: str = "Student_Performance.csv", plot_dir: str = "
             }
             results[column] = stats
 
-            # safe_name = "".join(c if c.isalnum() else "_" for c in column)
-            # base_path = os.path.join(plot_dir, safe_name)
+            safe_name = "".join(c if c.isalnum() else "_" for c in column)
+            base_path = os.path.join(plot_dir, safe_name)
 
             # plot_polygon_from_data(data_list, f"{base_path}_polygon.png")
             # plot_empirical_cdf(data_list, f"{base_path}_ecdf.png")

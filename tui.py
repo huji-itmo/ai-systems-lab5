@@ -10,9 +10,8 @@ from textual.widgets import (
 )
 from textual.binding import Binding
 
-from tui.dynamic_kNN_tab import DynamickNNTab
+from tui.dynamic_decision_tree_tab import DynamicDecisionTreeTab
 from tui.analyze_dataset import analyze_dataset
-from tui.kNN_tab import KNNTab
 from tui.stat_panel import StatPanel
 from tui.theme import get_theme
 
@@ -99,32 +98,15 @@ class MyApp(App):
                         for var_name, stats in self.analysis_results.items():
                             yield StatPanel(var_name=var_name, stats=stats)
 
-            with TabPane("🔍 kNN: All Features (8)"):
-                with VerticalScroll():
-                    yield KNNTab(
-                        model_name="kNN – All 8 Features",
-                        feature_names=self.all_features,
-                        x_data=self.X_all.tolist(),
-                        y_data=self.y.tolist(),
-                        initial_values=self.model1_initial,
-                    )
-
-            with TabPane("⚙️ kNN: Custom Feature Selection"):
-                yield DynamickNNTab(
-                    model_name="kNN – Select Features",
-                    all_feature_names=[
-                        "Pregnancies",
-                        "Glucose",
-                        "BloodPressure",
-                        "SkinThickness",
-                        "Insulin",
-                        "BMI",
-                        "Pedigree",
-                        "Age",
-                    ],
-                    x_data=self.X_all.tolist(),  # Full x_data
+            # Add the new Decision Tree tab
+            with TabPane("🌳 Decision Tree (C4.5)"):
+                yield DynamicDecisionTreeTab(
+                    model_name="Decision Tree",
+                    all_feature_names=self.all_features,
+                    x_data=self.X_all.tolist(),
                     y_data=self.y.tolist(),
-                    initial_values=self.model1_initial,  # Same initial row
+                    initial_values=self.model1_initial,
+                    target_name=self.target,
                 )
 
         yield Footer()
