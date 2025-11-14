@@ -58,22 +58,22 @@ class MyApp(App):
         Binding("escape", "unfocus", "Unfocus", show=False),  # <-- Add this
     ]
 
-    def __init__(self, csv_path: str = "Student_Performance.csv"):
+    def __init__(self, csv_path: str = "DATA.csv"):
         super().__init__()
         self.csv_path = csv_path
         self.df = pd.read_csv(csv_path)
 
-        self.all_features = [
-            "Pregnancies",
-            "Glucose",
-            "BloodPressure",
-            "SkinThickness",
-            "Insulin",
-            "BMI",
-            "Pedigree",
-            "Age",
-        ]
-        self.target = "Outcome"
+        numeric_columns = self.df.select_dtypes(include=[np.number]).columns.tolist()
+        if len(numeric_columns) > 1:
+            self.all_features = numeric_columns[
+                :-1
+            ]  # All numeric columns except the last one
+            self.target = numeric_columns[-1]  # Last numeric column as target
+        else:
+            # Fallback: if there are not enough numeric columns, use all except the last column
+            all_cols = self.df.columns.tolist()
+            self.all_features = all_cols[:-1]
+            self.target = all_cols[-1]
 
         # Sample one random row for initial values
         random_row = self.df.sample(n=1).iloc[0]
@@ -135,4 +135,4 @@ class MyApp(App):
 
 
 if __name__ == "__main__":
-    MyApp("diabetes.csv").run()
+    MyApp("DATA.csv").run()
